@@ -1,13 +1,13 @@
-# VueCardPaymentDist2
+# VueCardPayment
 
-[![npm](https://img.shields.io/npm/v/vue-card-payment-dist2.svg)](https://www.npmjs.com/package/vue-card-payment-dist2) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
+[![npm](https://img.shields.io/npm/v/vue-card-payment.svg)](https://www.npmjs.com/package/vue-card-payment) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
 > A Vue.js Plugin
 
 ## Installation
 
 ```bash
-npm install --save vue-card-payment-dist2
+npm install --save vue-card-payment
 ```
 
 ## Usage
@@ -16,11 +16,11 @@ npm install --save vue-card-payment-dist2
 
 ```js
 import Vue from 'vue'
-import VueCardPaymentDist2 from 'vue-card-payment-dist2'
+import VueCardPayment from 'vue-card-payment'
 // You need a specific loader for CSS files like https://github.com/webpack/css-loader
-import 'vue-card-payment-dist2/dist/vue-card-payment-dist2.css'
+import 'vue-card-payment/dist/vue-card-payment.css'
 
-Vue.use(VueCardPaymentDist2)
+Vue.use(VueCardPayment)
 ```
 
 ### Browser
@@ -28,12 +28,12 @@ Vue.use(VueCardPaymentDist2)
 ```html
 <!-- Include after Vue -->
 <!-- Local files -->
-<link rel="stylesheet" href="vue-card-payment-dist2/dist/vue-card-payment-dist2.css"></link>
-<script src="vue-card-payment-dist2/dist/vue-card-payment-dist2.js"></script>
+<link rel="stylesheet" href="vue-card-payment/dist/vue-card-payment.css"></link>
+<script src="vue-card-payment/dist/vue-card-payment.js"></script>
 
 <!-- From CDN -->
-<link rel="stylesheet" href="https://unpkg.com/vue-card-payment-dist2/dist/vue-card-payment-dist2.css"></link>
-<script src="https://unpkg.com/vue-card-payment-dist2"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-card-payment/dist/vue-card-payment.css"></link>
+<script src="https://unpkg.com/vue-card-payment"></script>
 ```
 
 ## Development
