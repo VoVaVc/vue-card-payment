@@ -91,7 +91,6 @@ export default {
 
   created: function(){
     CardInfo.setDefaultOptions(this.visual);
-    console.log(this.settings);
     this.systemSettings = Object.assign(this.settings, defaults);
   },
 
