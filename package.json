@@ -7,7 +7,7 @@
   "bugs": {
     "url" : "https://github.com/VoVaVc/vue-card-payment/issues",
     "email" : "vovavc@gmail.com"
-  }
+  },
   "main": "dist/vue-card-paymentcommon.js",
   "module": "dist/vue-card-payment.esm.js",
   "browser": "dist/vue-card-payment.js",
