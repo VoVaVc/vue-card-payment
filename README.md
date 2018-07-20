@@ -89,6 +89,10 @@ then, place this one in a place you want payment form to appear
 <script src="https://unpkg.com/vue-card-payment"></script>
 ```
 
+## Thanks
+[iserdmi](https://www.npmjs.com/~iserdmi) for [card-info](https://www.npmjs.com/package/card-info) plugin, this plugin is primary-based on it
+[braintree](https://www.npmjs.com/~braintree) for [card-validator](https://www.npmjs.com/package/card-validator) plugin, this one used here for validation needs
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)

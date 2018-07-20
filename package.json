@@ -1,21 +1,29 @@
 {
   "name": "vue-card-payment",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Awesome credit card payment form",
   "author": "Vladimir Pavlov <vovavc@gmail.com>",
-  "keywords": ["Vue", "Card", "Plugin", "Credit", "Payment", "Form"],
+  "keywords": ["Vue", "Card", "Plugin", "Credit", "Payment", "Form", "Credit card"],
   "bugs": {
-    "url" : "https://github.com/VoVaVc/vue-card-payment/issues",
-    "email" : "vovavc@gmail.com"
+    "url": "https://github.com/VoVaVc/vue-card-payment/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VoVaVc/vue-card-payment.git"
+  },
+  "contributors": [
+    {
+      "name": "VoVaVc",
+      "url": "https://github.com/VoVaVc"
+    }
+  ],
   "main": "dist/vue-card-paymentcommon.js",
   "module": "dist/vue-card-payment.esm.js",
   "browser": "dist/vue-card-payment.js",
   "unpkg": "dist/vue-card-payment.js",
   "style": "dist/vue-card-payment.css",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "clean": "rimraf dist",
