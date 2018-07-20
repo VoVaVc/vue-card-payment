@@ -1,66 +1,79 @@
-# vue-card-payment
+# VueCardPaymentDist2
 
-A Vue.js project
+[![npm](https://img.shields.io/npm/v/vue-card-payment-dist2.svg)](https://www.npmjs.com/package/vue-card-payment-dist2) [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 
-<p align="center">
-  <a href="https://circleci.com/gh//vue-card-payment">
-    <img src="https://circleci.com/gh//vue-card-payment.svg?style=svg" alt="Build Status" />
-  </a>
-  <a href="https://coveralls.io/github//vue-card-payment?branch=master">
-    <img src="https://coveralls.io/repos/github//vue-card-payment/badge.svg?branch=master&style=flat-square" alt="Coverage Status" />
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License" />
-  </a>
-  <a href="https://npmjs.org/package/vue-card-payment">
-    <img src="https://img.shields.io/npm/v/vue-card-payment.svg?style=flat-square" alt="Packagist" />
-  </a>
-  <a href="https://github.com//vue-card-payment/releases">
-    <img src="https://img.shields.io/github/release//vue-card-payment.svg?style=flat-square" alt="Latest Version" />
-  </a>
+> A Vue.js Plugin
 
-  <a href="https://github.com//vue-card-payment/issues">
-    <img src="https://img.shields.io/github/issues//vue-card-payment.svg?style=flat-square" alt="Issues" />
-  </a>
-</p>
+## Installation
 
-### Installation
-```
-npm install --save vue-card-payment
+```bash
+npm install --save vue-card-payment-dist2
 ```
 
-or
+## Usage
 
-```
-yarn add vue-card-payment
-```
+### Bundler (Webpack, Rollup)
 
-## Change log
+```js
+import Vue from 'vue'
+import VueCardPaymentDist2 from 'vue-card-payment-dist2'
+// You need a specific loader for CSS files like https://github.com/webpack/css-loader
+import 'vue-card-payment-dist2/dist/vue-card-payment-dist2.css'
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
-
-## Testing
-
-``` bash
-$ npm run test
+Vue.use(VueCardPaymentDist2)
 ```
 
-## Contributing
+### Browser
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details.
+```html
+<!-- Include after Vue -->
+<!-- Local files -->
+<link rel="stylesheet" href="vue-card-payment-dist2/dist/vue-card-payment-dist2.css"></link>
+<script src="vue-card-payment-dist2/dist/vue-card-payment-dist2.js"></script>
 
-## Security
+<!-- From CDN -->
+<link rel="stylesheet" href="https://unpkg.com/vue-card-payment-dist2/dist/vue-card-payment-dist2.css"></link>
+<script src="https://unpkg.com/vue-card-payment-dist2"></script>
+```
 
-If you discover any security related issues, please email vovavc@gmail.com instead of using the issue tracker.
+## Development
 
-## Credits
+### Launch visual tests
 
-- [Vladimir Pavlov][link-author]
-- [All Contributors][link-contributors]
+```bash
+npm run dev
+```
+
+### Launch Karma with coverage
+
+```bash
+npm run dev:coverage
+```
+
+### Build
+
+Bundle the js and css of to the `dist` folder:
+
+```bash
+npm run build
+```
+
+
+## Publishing
+
+The `prepublish` hook will ensure dist files are created before publishing. This
+way you don't need to commit them in your repository.
+
+```bash
+# Bump the version first
+# It'll also commit it and create a tag
+npm version
+# Push the bumped package and tags
+git push --follow-tags
+# Ship it 🚀
+npm publish
+```
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-[link-author]: https://github.com/
-[link-contributors]: ../../contributors
+[MIT](http://opensource.org/licenses/MIT)

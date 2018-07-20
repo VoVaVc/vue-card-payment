@@ -2,7 +2,7 @@
   <div class="cardWrap" :class="{'valid' : valid}" :style="{
       background: visual.backgroundGradient
     }">
-    <form @submit.prevent="onBtn" ref="paymentForm" :class="bankInfo.backgroundLightness">
+    <form @submit.prevent="onBtn" :class="bankInfo.backgroundLightness">
       <div class="bankLogo">
         <img :src="getImage(bankInfo.bankLogo)"/>
         <!-- <img src="~/card-info/dist/banks-logos/ru-tinkoff.svg"/> -->
@@ -43,8 +43,8 @@
 </template>
 
 <script>
-var CardValidator = require('card-validator');
-import CardInfo from 'card-info'
+import * as CardValidator from 'card-validator';
+import CardInfo from 'card-info';
 
 // get all logos file from card-info plugin to use it further
 const LogosRaw = require.context('card-info/dist/', true, /\.png/);
@@ -310,12 +310,6 @@ export default {
     border-bottom-left-radius: 34px;
     border-bottom-right-radius: 34px;
     text-align: center;
-
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6cc067+0,00fb13+100&1+0,0.75+100 */
-    /* background: -moz-linear-gradient(left,  rgba(108,192,103,1) 0, rgba(0,251,19,0.75) 100%); /* FF3.6-15 */ */
-    /* background: -webkit-linear-gradient(left,  rgba(108,192,103,1) 0,rgba(0,251,19,0.75) 100%); /* Chrome10-25,Safari5.1-6 */ */
-    /* background: linear-gradient(to right,  rgba(108,192,103,1) 0,rgba(0,251,19,0.75) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ */
-    /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6cc067', endColorstr='#bf00fb13',GradientType=1 ); /* IE6-9 */ */
 
     transition: .3s border linear, .3s background linear;
   }
