@@ -64,18 +64,18 @@ LogosRawSvg.keys().forEach(function(key){
 
 const defaults = {
   labels: {
-    cardNumber: 'Номер карты',
-    month: 'Месяц',
-    year: 'Год',
-    cardHolder: 'Имя держателя карты',
-    button: 'Оплатить'
+    cardNumber: 'Card number',
+    month: 'Month',
+    year: 'Year',
+    cardHolder: 'Cardholder name',
+    button: 'pay'
   },
 
   placeholders: {
     cardNumber: '0000 0000 0000 0000',
     month: '00',
     year: '00',
-    cardHolder: 'IVAN IVANOV',
+    cardHolder: 'JOHN DOE',
     cvv: '000'
   }
 }

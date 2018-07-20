@@ -1,7 +1,7 @@
 import VueCardPayment from './VueCardPayment.vue'
 
 function plugin (Vue) {
-  Vue.component('hello', VueCardPayment)
+  Vue.component('VueCardPayment', VueCardPayment)
 }
 
 // Install by default if using the script tag

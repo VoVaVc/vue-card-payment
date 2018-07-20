@@ -1,6 +1,6 @@
 {
   "name": "vue-card-payment",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A Vue.js Plugin",
   "author": "Vladimir Pavlov <vovavc@gmail.com>",
   "main": "dist/vue-card-paymentcommon.js",
