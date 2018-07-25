@@ -1,6 +1,6 @@
 {
   "name": "vue-card-payment",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Awesome credit card payment form",
   "author": "Vladimir Pavlov <vovavc@gmail.com>",
   "keywords": [
@@ -125,17 +125,17 @@
     "webpack-dashboard": "^0.4.0",
     "webpack-dev-server": "^2.4.0",
     "webpack-merge": "^4.0.0",
-    "yarn-or-npm": "^2.0.0"
+    "yarn-or-npm": "^2.0.0",
+    "copy-webpack-plugin": "^4.5.2",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "lodash": "^4.16.4"
   },
   "peerDependencies": {
     "vue": "^2.3.0"
   },
   "dependencies": {
     "card-info": "^1.2.4",
-    "card-validator": "^5.0.0",
-    "copy-webpack-plugin": "^4.5.2",
-    "friendly-errors-webpack-plugin": "^1.7.0",
-    "lodash": "^4.16.4"
+    "card-validator": "^5.0.0"
   },
   "dllPlugin": {
     "name": "vuePluginTemplateDeps",
