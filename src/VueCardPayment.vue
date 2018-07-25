@@ -9,25 +9,36 @@
       </div>
       <div class="row">
         <label>{{systemSettings.labels.cardNumber}}</label>
-        <!-- <input type="number" > -->
-        <input type="phone" placeholder-char="_" :placeholder="systemSettings.placeholders.cardNumber" v-model="card.number" name="cardnumber" autocomplete="cc-number"/>
+        <input type="phone" placeholder-char="_"
+          :placeholder="systemSettings.placeholders.cardNumber" maxlength="23"
+          v-model="card.number" name="cardnumber" autocomplete="cc-number"
+          @keypress="isNumber"
+        />
       </div>
       <div class="row">
         <div class="part">
           <label>{{systemSettings.labels.month}}</label>
-          <input type="number" :placeholder="systemSettings.placeholders.month" min="1" max="12" maxlength="2" v-model="card.month" autocomplete="cc-exp">
+          <input type="number" :placeholder="systemSettings.placeholders.month"
+            min="1" max="12" maxlength="2" v-model="card.month"
+            autocomplete="cc-exp" @keypress="isNumber"
+            />
         </div>
         <div class="part sepLine">
           <span></span>
         </div>
         <div class="part">
           <label>{{systemSettings.labels.year}}</label>
-          <input type="number" :placeholder="systemSettings.placeholders.year" min="0" max="99" maxlength="2" name="cc-exp" v-model="card.year" autocomplete="cc-exp">
+          <input type="number" :placeholder="systemSettings.placeholders.year"
+            min="0" max="99" maxlength="2" name="cc-exp" v-model="card.year"
+            autocomplete="cc-exp" @keypress="isNumber"
+          />
         </div>
         <div class="part right">
           <label>{{ bankInfo.codeName ? bankInfo.codeName : 'CVV' }}</label>
-          <input type="password" :placeholder="systemSettings.placeholders.cvv" name="cvc" v-model="card.cvv" maxlength="3" autocomplete="cc-cvc">
-          <!-- <div class="whatIsIt">?</div> -->
+          <input type="password" :placeholder="systemSettings.placeholders.cvv"
+            name="cvc" v-model="card.cvv" maxlength="3" autocomplete="cc-cvc"
+            @keypress="isNumber"
+          />
         </div>
       </div>
       <div class="row">
@@ -155,13 +166,29 @@ export default {
 
     onBtn(){
       this.$emit('card-submit')
-    }
+    },
+
+    isNumber: function(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+        evt.preventDefault();;
+      } else {
+        return true;
+      }
+    },
   },
 
   watch: {
     'card.number'(){
       this.bankInfo = new CardInfo(this.card.number);
-      this.card.number = this.bankInfo.numberNice;
+      let niceNumber = this.bankInfo.numberNice;
+
+      if(niceNumber.length > 19){
+        niceNumber =  niceNumber.slice(0, 19) + ' ' + niceNumber.slice(19)
+      }
+
+      this.card.number = niceNumber;
     },
 
     'bankInfo'(newVal){
@@ -173,13 +200,22 @@ export default {
     },
 
     'card.month'(newVal){
+      // limit chars to 2
       if(this.card.month.toString().length > 2){
         this.card.month = parseInt(this.card.month.toString().substring(0,2));
+      }
+
+      if(parseInt(this.card.month) > 12){
+        this.card.month = 12;
       }
 
       if(newVal.length > 1){
         this.validateMonth();
       }
+    },
+
+    'card.cvv'(val){
+      this.card.cvv = val.replace(/\D/g,'');
     },
 
     'card.year'(newVal){

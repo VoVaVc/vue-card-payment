@@ -3,7 +3,16 @@
   "version": "0.1.6",
   "description": "Awesome credit card payment form",
   "author": "Vladimir Pavlov <vovavc@gmail.com>",
-  "keywords": ["Vue", "Card", "Plugin", "Credit", "Payment", "Form", "Credit card"],
+  "keywords": [
+    "Vue",
+    "Card",
+    "Plugin",
+    "Credit",
+    "Payment",
+    "Form",
+    "Credit card",
+    "Checkout"
+  ],
   "bugs": {
     "url": "https://github.com/VoVaVc/vue-card-payment/issues"
   },
@@ -38,7 +47,8 @@
     "test": "cross-env BABEL_ENV=test karma start test/karma.conf.js --single-run",
     "dev": "webpack-dashboard -- webpack-dev-server --config build/webpack.config.dev.js --open",
     "dev:coverage": "cross-env BABEL_ENV=test karma start test/karma.conf.js",
-    "prepublish": "yon run build"
+    "prepublish": "yon run build",
+    "example": "webpack-dev-server --inline --progress --config build/webpack.config.example.js"
   },
   "lint-staged": {
     "*.{vue,jsx,js}": [
@@ -121,9 +131,11 @@
     "vue": "^2.3.0"
   },
   "dependencies": {
-    "lodash": "^4.16.4",
+    "card-info": "^1.2.4",
     "card-validator": "^5.0.0",
-    "card-info": "^1.2.4"
+    "copy-webpack-plugin": "^4.5.2",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "lodash": "^4.16.4"
   },
   "dllPlugin": {
     "name": "vuePluginTemplateDeps",
