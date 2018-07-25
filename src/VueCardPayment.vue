@@ -1,50 +1,53 @@
 <template>
   <div class="cardWrap" :class="{'valid' : valid}" :style="{
-      background: visual.backgroundGradient
+      background: systemSettings.showBank ? visual.backgroundGradient : ''
     }">
-    <form @submit.prevent="onBtn" :class="bankInfo.backgroundLightness">
+    <form @submit.prevent="onBtn" :class="systemSettings.showBank ? bankInfo.backgroundLightness : ''">
       <div class="bankLogo">
-        <img :src="getImage(bankInfo.bankLogo)"/>
+        <img v-if="systemSettings.showBank" :src="getImage(bankInfo.bankLogo)"/>
         <!-- <img src="~/card-info/dist/banks-logos/ru-tinkoff.svg"/> -->
       </div>
       <div class="row">
-        <label>{{systemSettings.labels.cardNumber}}</label>
-        <input type="phone" placeholder-char="_"
+        <label for="cardnumber">{{systemSettings.labels.cardNumber}}</label>
+        <input type="phone"
           :placeholder="systemSettings.placeholders.cardNumber" maxlength="23"
           v-model="card.number" name="cardnumber" autocomplete="cc-number"
-          @keypress="isNumber"
+          @keydown="isNumber"
         />
       </div>
       <div class="row">
         <div class="part">
-          <label>{{systemSettings.labels.month}}</label>
+          <label for="cc-exp-month">{{systemSettings.labels.month}}</label>
           <input type="number" :placeholder="systemSettings.placeholders.month"
-            min="1" max="12" maxlength="2" v-model="card.month"
-            autocomplete="cc-exp" @keypress="isNumber"
+            :min="this.card.year == getCurrYear() ? getCurrMonth() : 1" max="12"
+            v-model="card.month" name="cc-exp-month"
+            autocomplete="cc-exp" @keydown="isNumber" @blur="trailingZero"
             />
         </div>
         <div class="part sepLine">
           <span></span>
         </div>
         <div class="part">
-          <label>{{systemSettings.labels.year}}</label>
+          <label for="cc-exp">{{systemSettings.labels.year}}</label>
           <input type="number" :placeholder="systemSettings.placeholders.year"
-            min="0" max="99" maxlength="2" name="cc-exp" v-model="card.year"
-            autocomplete="cc-exp" @keypress="isNumber"
+            :min="getCurrYear()" max="99" name="cc-exp" v-model="card.year"
+            autocomplete="cc-exp" @keydown="isNumber" @blur="trailingZero"
           />
         </div>
         <div class="part right">
-          <label>{{ bankInfo.codeName ? bankInfo.codeName : 'CVV' }}</label>
+          <label for="cvc">{{ bankInfo.codeName ? bankInfo.codeName : 'CVV' }}</label>
           <input type="password" :placeholder="systemSettings.placeholders.cvv"
             name="cvc" v-model="card.cvv" maxlength="3" autocomplete="cc-cvc"
-            @keypress="isNumber"
+            @keydown="isNumber"
           />
         </div>
       </div>
       <div class="row">
-        <label>{{systemSettings.labels.cardHolder}}</label>
-        <input type="text" :placeholder="systemSettings.placeholders.cardHolder" name="ccname" v-model="card.name" autocomplete="cc-name">
-        <img :src="getImage(bankInfo.brandLogo)" class="brandLogo right"/>
+        <label for="ccname">{{systemSettings.labels.cardHolder}}</label>
+        <input type="text" :placeholder="systemSettings.placeholders.cardHolder"
+          name="ccname" v-model="card.name" autocomplete="cc-name" @keydown="onlyLetters"
+          />
+        <img v-if="systemSettings.showPaymentSystem" :src="getImage(bankInfo.brandLogo)" class="brandLogo right"/>
       </div>
       <div class="submit">
         <button type="submit">{{systemSettings.labels.button}}</button>
@@ -67,6 +70,9 @@ LogosRaw.keys().forEach(function(key){
   Logos[key] = base64;
 });
 
+ // exception keys are: space, enter, backspace, left arrow, up arrow, right arrow, down arrow
+const exceptionKeys = [32, 13, 8, 37, 38, 39, 40];
+
 // if there are svg, ovverride png
 LogosRawSvg.keys().forEach(function(key){
   var base64 = LogosRawSvg(key);
@@ -88,11 +94,14 @@ const defaults = {
     year: '00',
     cardHolder: 'JOHN DOE',
     cvv: '000'
-  }
+  },
+
+  showBank: true,
+  showPaymentSystem: true
 }
 
 export default {
-  name: 'VueCreditCard',
+  name: 'VueCardPayment',
   props: {
     settings: {
       type: Object,
@@ -102,11 +111,8 @@ export default {
 
   created: function(){
     CardInfo.setDefaultOptions(this.visual);
-    this.systemSettings = Object.assign(this.settings, defaults);
-  },
-
-  mounted: function(){
-
+    console.log()
+    this.systemSettings = Object.assign({}, defaults, this.settings);
   },
 
   data() {
@@ -121,9 +127,7 @@ export default {
         cvv: '',
       },
 
-      bankInfo: {
-
-      },
+      bankInfo: {},
 
       visual: {
         backgroundColor: '#eee',
@@ -133,7 +137,6 @@ export default {
       },
 
       valid: false,
-      errMsg: '',
     };
   },
 
@@ -146,15 +149,31 @@ export default {
 
     validateMonth(){
       var currYear = this.getCurrYear(),
-          currMonth = new Date().getMonth();
+          currMonth = this.getCurrMonth();
 
       if(this.card.year == currYear && parseInt(this.card.month) < currMonth){
         this.card.month = currMonth < 10 ? '0'+currMonth : currMonth;
       }
     },
 
+    validateYear(){
+      let currYear = this.getCurrYear();
+
+      if(this.card.year.toString().length > 2){
+        this.card.year = this.card.year.toString().substring(0,2);
+      }
+
+      if(parseInt(this.card.year) < currYear && this.card.year.length > 1){
+        this.card.year = currYear;
+      }
+    },
+
     getCurrYear(){
       return parseInt(new Date().getFullYear().toString().substr(2))
+    },
+
+    getCurrMonth(){
+      return new Date().getMonth();
     },
 
     passData(){
@@ -165,18 +184,51 @@ export default {
     },
 
     onBtn(){
-      this.$emit('card-submit')
+      if(this.valid){
+        this.$emit('card-submit')
+      }
     },
 
-    isNumber: function(evt) {
+    isNumber(evt) {
       evt = (evt) ? evt : window.event;
-      var charCode = (evt.which) ? evt.which : evt.keyCode;
-      if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
-        evt.preventDefault();;
+      let charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (
+        (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105)))
+        && exceptionKeys.indexOf(charCode) == -1) {
+        evt.preventDefault();
       } else {
         return true;
       }
     },
+
+    onlyLetters(evt){
+      evt = (evt) ? evt : window.event;
+      let charCode = (evt.which) ? evt.which : evt.keyCode;
+
+      // additional exceptions: ,-'.
+      let exceptionKeysName = exceptionKeys.concat([188, 189, 222, 190])
+
+      if( !(charCode >= 65 && charCode <= 120)
+         && exceptionKeysName.indexOf(charCode) == -1 ){
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+
+    trailingZero(evt){
+      let val = evt.target ? evt.target.value : evt;
+
+      if(parseInt(val, 10) < 10 && val.toString().charAt('0') != '0'){
+        if(evt.target.name == 'cc-exp'){
+          this.card.year = "0"+val;
+          this.validateYear();
+        } else if(evt.target.name == 'cc-exp-month'){
+          this.card.month = "0"+val;
+          this.validateMonth();
+        }
+      }
+    }
   },
 
   watch: {
@@ -196,13 +248,13 @@ export default {
     },
 
     'card.name'(){
-      this.card.name = this.card.name.toUpperCase();
+      this.card.name = this.card.name.toUpperCase().replace(/[^A-Z\s'-,.]/g,'');
     },
 
     'card.month'(newVal){
       // limit chars to 2
       if(this.card.month.toString().length > 2){
-        this.card.month = parseInt(this.card.month.toString().substring(0,2));
+        this.card.month = this.card.month.toString().substring(0,2);
       }
 
       if(parseInt(this.card.month) > 12){
@@ -219,27 +271,20 @@ export default {
     },
 
     'card.year'(newVal){
-      var currYear = this.getCurrYear();
-
-      if(this.card.year.toString().length > 2){
-        this.card.year = parseInt(this.card.year.toString().substring(0,2));
-      }
-
-      if(newVal < currYear && newVal.length > 1){
-        this.card.year = currYear;
-      }
-
+      this.validateYear();
       this.validateMonth();
     },
 
     'card': {
       handler(){
+        let validName = this.card.name && this.card.name.search(' ') > 0;
+
         this.valid = (
           CardValidator.number(this.card.number).isValid
           && CardValidator.expirationMonth(this.card.month).isValid
           && CardValidator.expirationYear(this.card.year, new Date().getFullYear().toString().substring(2)).isValid
           && CardValidator.cvv(this.card.cvv).isValid
-          && this.card.name
+          && validName
         );
 
         this.passData();
@@ -351,7 +396,7 @@ export default {
 
   .cardWrap button {
     border: 1px solid #fff;
-    background: 0 0;
+    background: #d6d2d2;
     box-shadow: none;
     margin: 15px;
     height: 32px;
@@ -472,10 +517,9 @@ export default {
         margin: -28px 0 0;
       }
 
-.errMsg
-{
-  color: #a50000e0;
-  font-size: 14px;
-  text-align: right;
-}
+      .dark button
+      {
+        background: 0 0;
+      }
+
 </style>

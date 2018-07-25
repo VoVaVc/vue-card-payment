@@ -6,6 +6,8 @@
 
 ![DEMO](https://media.giphy.com/media/46zASYmXsfOUprZXcr/giphy.gif)
 
+[React version](https://www.npmjs.com/package/react-card-payment)
+
 ## Installation
 
 ```bash
@@ -32,9 +34,15 @@ then, place this one in a place you want payment form to appear
 
 ## Properties
 
+### Settings
+| Prop        | Data type           | Default  | Description  |
+| ------------- |:-------------:| -----| -----|
+| showBank            | bool | true | if false, card form will not be themed with bank logo and corporate styles
+| showPaymentSystem   | bool | true | if false, payment system logo will not be showed
+
 ### Labels
 | Prop        | Data type           | Default  |
-| ------------- |:-------------:| -----:|
+| ------------- |:-------------| -----|
 | labels.cardnumber         | string | Card number |
 | labels.month              | string | Month |
 | labels.year               | string | Year |
@@ -43,7 +51,7 @@ then, place this one in a place you want payment form to appear
 
 ### Placeholders
 | Prop        | Data type           | Default  |
-| ------------- |:-------------:| -----:|
+| ------------- |:-------------| -----|
 | placeholders.cardnumber         | string | 0000 0000 0000 0000 |
 | placeholders.month              | string | 00 |
 | placeholders.year               | string | 00 |
@@ -71,8 +79,11 @@ then, place this one in a place you want payment form to appear
         year: '00',
         cardHolder: 'JOHN DOE',
         cvv: '000'
-    }
-  }" @card-submit="this.log('button pressed')"></VueCardPayment>
+    },
+
+    showBank: true,
+    showPaymentSystem: true
+  }" @card-submit=""></VueCardPayment>
 ```
 
 

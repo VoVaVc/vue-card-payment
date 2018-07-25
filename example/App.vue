@@ -1,6 +1,8 @@
 <template>
   <div>
-    <VueCardPayment @card-submit="alert('button pressed')"></VueCardPayment>
+    <VueCardPayment :settings="{
+      /* showBank: false */
+    }" @card-submit=""></VueCardPayment>
   </div>
 </template>
 
