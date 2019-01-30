@@ -57,27 +57,27 @@
 </template>
 
 <script>
-import * as CardValidator from 'card-validator';
-import CardInfo from 'card-info';
+import * as CardValidator from 'card-validator'
+import CardInfo from 'card-info'
 
 // get all logos file from card-info plugin to use it further
-const LogosRaw = require.context('card-info/dist/', true, /\.png/);
-const LogosRawSvg = require.context('card-info/dist/', true, /\.svg/);
-var Logos = {};
+const LogosRaw = require.context('card-info/dist/', true, /\.png/)
+const LogosRawSvg = require.context('card-info/dist/', true, /\.svg/)
+const Logos = {}
 
-LogosRaw.keys().forEach(function(key){
-  var base64 = LogosRaw(key);
-  Logos[key] = base64;
-});
+LogosRaw.keys().forEach(function (key) {
+  const base64 = LogosRaw(key)
+  Logos[key] = base64
+})
 
  // exception keys are: space, enter, backspace, left arrow, up arrow, right arrow, down arrow
-const exceptionKeys = [32, 13, 8, 37, 38, 39, 40];
+const exceptionKeys = [32, 13, 8, 37, 38, 39, 40]
 
 // if there are svg, ovverride png
-LogosRawSvg.keys().forEach(function(key){
-  var base64 = LogosRawSvg(key);
-  Logos[key] = base64;
-});
+LogosRawSvg.keys().forEach(function (key) {
+  const base64 = LogosRawSvg(key)
+  Logos[key] = base64
+})
 
 const defaults = {
   labels: {
@@ -109,13 +109,12 @@ export default {
     }
   },
 
-  created: function(){
-    CardInfo.setDefaultOptions(this.visual);
-    console.log()
-    this.systemSettings = Object.assign({}, defaults, this.settings);
+  created: function () {
+    CardInfo.setDefaultOptions(this.visual)
+    this.systemSettings = Object.assign({}, defaults, this.settings)
   },
 
-  data() {
+  data () {
     return {
       systemSettings: {},
 
@@ -124,7 +123,7 @@ export default {
         name: '',
         month: '',
         year: '',
-        cvv: '',
+        cvv: ''
       },
 
       bankInfo: {},
@@ -136,183 +135,166 @@ export default {
         brandsLogosPath: 'brands-logos/'
       },
 
-      valid: false,
-    };
+      valid: false
+    }
   },
 
   methods: {
-    getImage(path){
-      if(path){
-        return Logos['./'+path];
+    getImage (path) {
+      if (path) {
+        return Logos['./' + path]
       }
     },
 
-    validateMonth(){
-      var currYear = this.getCurrYear(),
-          currMonth = this.getCurrMonth();
+    validateMonth () {
+      const currYear = this.getCurrYear()
+      const currMonth = this.getCurrMonth()
 
-      if(this.card.year == currYear && parseInt(this.card.month) < currMonth){
-        this.card.month = currMonth < 10 ? '0'+currMonth : currMonth;
+      if (this.card.year === currYear && parseInt(this.card.month) < currMonth) {
+        this.card.month = currMonth < 10 ? '0' + currMonth : currMonth
       }
     },
 
-    validateYear(){
-      let currYear = this.getCurrYear();
+    validateYear () {
+      const currYear = this.getCurrYear()
 
-      if(this.card.year.toString().length > 2){
-        this.card.year = this.card.year.toString().substring(0,2);
-      }
-
-      if(parseInt(this.card.year) < currYear && this.card.year.length > 1){
-        this.card.year = currYear;
-      }
+      if (this.card.year.toString().length > 2) this.card.year = this.card.year.toString().substring(0, 2)
+      if (parseInt(this.card.year) < currYear && this.card.year.length > 1) this.card.year = currYear
     },
 
-    getCurrYear(){
+    getCurrYear () {
       return parseInt(new Date().getFullYear().toString().substr(2))
     },
 
-    getCurrMonth(){
-      return new Date().getMonth();
+    getCurrMonth () {
+      return new Date().getMonth()
     },
 
-    passData(){
-      var obj = this.card;
-      obj.valid = this.valid;
+    passData () {
+      const obj = this.card
+      obj.valid = this.valid
 
-      this.$emit('input', obj);
+      this.$emit('input', obj)
     },
 
-    onBtn(){
-      if(this.valid){
+    onBtn () {
+      if (this.valid) {
         this.$emit('card-submit')
       }
     },
 
-    isNumber(evt) {
-      evt = (evt) ? evt : window.event;
-      let charCode = (evt.which) ? evt.which : evt.keyCode;
+    isNumber (evt) {
+      evt = (evt) || window.event
+      const charCode = (evt.which) ? evt.which : evt.keyCode
       if (
-        (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105)))
-        && exceptionKeys.indexOf(charCode) == -1) {
-        evt.preventDefault();
+        (charCode > 31 && ((charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105))) &&
+        exceptionKeys.indexOf(charCode) === -1) {
+        evt.preventDefault()
       } else {
-        return true;
+        return true
       }
     },
 
-    onlyLetters(evt){
-      evt = (evt) ? evt : window.event;
-      let charCode = (evt.which) ? evt.which : evt.keyCode;
+    onlyLetters (evt) {
+      evt = (evt) || window.event
+      const charCode = (evt.which) ? evt.which : evt.keyCode
 
       // additional exceptions: ,-'.
-      let exceptionKeysName = exceptionKeys.concat([188, 189, 222, 190])
+      const exceptionKeysName = exceptionKeys.concat([188, 189, 222, 190])
 
-      if( !(charCode >= 65 && charCode <= 120)
-         && exceptionKeysName.indexOf(charCode) == -1 ){
-        evt.preventDefault();
+      if (!(charCode >= 65 && charCode <= 120) &&
+         exceptionKeysName.indexOf(charCode) === -1) {
+        evt.preventDefault()
       } else {
-        return true;
+        return true
       }
     },
 
-    trailingZero(evt){
-      let val = evt.target ? evt.target.value : evt;
+    trailingZero (evt) {
+      const val = evt.target ? evt.target.value : evt
 
-      if(parseInt(val, 10) < 10 && val.toString().charAt('0') != '0'){
-        if(evt.target.name == 'cc-exp'){
-          this.card.year = "0"+val;
-          this.validateYear();
-        } else if(evt.target.name == 'cc-exp-month'){
-          this.card.month = "0"+val;
-          this.validateMonth();
+      if (parseInt(val, 10) < 10 && val.toString().charAt('0') !== '0') {
+        if (evt.target.name === 'cc-exp') {
+          this.card.year = `0${val}`
+          this.validateYear()
+        } else if (evt.target.name === 'cc-exp-month') {
+          this.card.month = `0${val}`
+          this.validateMonth()
         }
       }
     }
   },
 
   watch: {
-    'card.number'(){
-      this.bankInfo = new CardInfo(this.card.number);
-      let niceNumber = this.bankInfo.numberNice;
+    'card.number' () {
+      this.bankInfo = new CardInfo(this.card.number)
+      let niceNumber = this.bankInfo.numberNice
 
-      if(niceNumber.length > 19){
-        niceNumber =  niceNumber.slice(0, 19) + ' ' + niceNumber.slice(19)
-      }
+      if (niceNumber.length > 19) niceNumber = niceNumber.slice(0, 19) + ' ' + niceNumber.slice(19)
 
-      this.card.number = niceNumber;
+      this.card.number = niceNumber
     },
 
-    'bankInfo'(newVal){
-      this.visual.backgroundGradient = newVal.backgroundGradient;
+    'bankInfo' (newVal) {
+      this.visual.backgroundGradient = newVal.backgroundGradient
     },
 
-    'card.name'(){
-      this.card.name = this.card.name.toUpperCase().replace(/[^A-Z\s'-,.]/g,'');
+    'card.name' () {
+      this.card.name = this.card.name.toUpperCase().replace(/[^A-Z\s'-,.]/g, '')
     },
 
-    'card.month'(newVal){
+    'card.month' (newVal) {
       // limit chars to 2
-      if(this.card.month.toString().length > 2){
-        this.card.month = this.card.month.toString().substring(0,2);
-      }
-
-      if(parseInt(this.card.month) > 12){
-        this.card.month = 12;
-      }
-
-      if(newVal.length > 1){
-        this.validateMonth();
-      }
+      if (this.card.month.toString().length > 2) this.card.month = this.card.month.toString().substring(0, 2)
+      if (parseInt(this.card.month) > 12) this.card.month = 12
+      if (newVal.length > 1) this.validateMonth()
     },
 
-    'card.cvv'(val){
-      this.card.cvv = val.replace(/\D/g,'');
+    'card.cvv' (val) {
+      this.card.cvv = val.replace(/\D/g, '')
     },
 
-    'card.year'(newVal){
-      this.validateYear();
-      this.validateMonth();
+    'card.year' (newVal) {
+      this.validateYear()
+      this.validateMonth()
     },
 
     'card': {
-      handler(){
-        let validName = this.card.name && this.card.name.search(' ') > 0;
+      handler () {
+        const validName = this.card.name && this.card.name.search(' ') > 0
 
         this.valid = (
-          CardValidator.number(this.card.number).isValid
-          && CardValidator.expirationMonth(this.card.month).isValid
-          && CardValidator.expirationYear(this.card.year, new Date().getFullYear().toString().substring(2)).isValid
-          && CardValidator.cvv(this.card.cvv).isValid
-          && validName
-        );
+          CardValidator.number(this.card.number).isValid &&
+          CardValidator.expirationMonth(this.card.month).isValid &&
+          CardValidator.expirationYear(this.card.year, new Date().getFullYear().toString().substring(2)).isValid &&
+          CardValidator.cvv(this.card.cvv).isValid &&
+          validName
+        )
 
-        this.passData();
+        this.passData()
       },
 
       deep: true
     }
-  },
-};
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .cardWrap
-  {
+  .cardWrap {
     width: 420px;
     height: 280px;
     position: relative;
     margin: 0 auto;
     padding: 15px 35px;
-    background: #F9F9F9;
+    background: #f9f9f9;
     border-radius: 34px;
-    border: 1px solid #DBDBDB;
+    border: 1px solid #dbdbdb;
     text-align: left;
   }
 
-  .cardWrap .info
-  {
+  .cardWrap .info {
     overflow: hidden;
   }
 
@@ -322,14 +304,13 @@ export default {
     margin: 9px 0;
   }
 
-  .cardWrap form
-  {
+  .cardWrap form {
     margin: 5px 0;
   }
 
   .cardWrap label {
     position: absolute;
-    color: #9B9B9B;
+    color: #9b9b9b;
     font-size: 10px;
     top: 6px;
     left: 24px;
@@ -339,7 +320,7 @@ export default {
   .cardWrap input {
     padding: 14px 22px 0;
     height: 40px;
-    border: 1px solid #DBDBDB;
+    border: 1px solid #dbdbdb;
     box-shadow: none;
     width: 100%;
   }
@@ -366,9 +347,8 @@ export default {
     float: right;
   }
 
-  .cardWrap .whatIsIt
-  {
-    background: #2679FF;
+  .cardWrap .whatIsIt {
+    background: #2679ff;
     border-radius: 100px;
     width: 23px;
     height: 23px;
@@ -380,8 +360,7 @@ export default {
     font-size: 14px;
   }
 
-  .cardWrap .submit
-  {
+  .cardWrap .submit {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -390,8 +369,7 @@ export default {
     border-bottom-left-radius: 34px;
     border-bottom-right-radius: 34px;
     text-align: center;
-
-    transition: .3s border linear, .3s background linear;
+    transition: 0.3s border linear, 0.3s background linear;
   }
 
   .cardWrap button {
@@ -406,8 +384,7 @@ export default {
     outline: none;
     font-size: 14px;
     cursor: not-allowed;
-
-    transition: .3s color linear, .3s background linear;
+    transition: 0.3s color linear, 0.3s background linear;
   }
 
   .cardWrap .info {
@@ -415,7 +392,7 @@ export default {
   }
 
   .cardWrap .text {
-        color: #9B9B9B;
+    color: #9b9b9b;
     margin: 12px 0 0;
     padding: 0 22px;
     line-height: 22px;
@@ -427,8 +404,7 @@ export default {
     margin: -41px 0 0;
   }
 
-  input::-webkit-inner-spin-button
-  {
+  input::-webkit-inner-spin-button {
     display: none;
   }
 
@@ -436,90 +412,75 @@ export default {
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-      transition: background-color 5000s ease-in-out 0s;
-      background-color: #fff;
+    transition: background-color 5000s ease-in-out 0s;
+    background-color: #fff;
   }
 
-  .cardWrap.valid .submit
-  {
+  .cardWrap.valid .submit {
     background: transparent;
     border-top: 1px solid #dbdbdb;
   }
 
-  .cardWrap.valid button
-  {
+  .cardWrap.valid button {
     color: #fff;
     background: #6cc067;
     font-weight: bold;
     cursor: pointer;
-
-    color: #fff;
-    background: #6cc067;
-    font-weight: bold;
-    box-shadow: 1px 1px 0px 1px #437d3f;
+    box-shadow: 1px 1px 0 1px #437d3f;
     border: 0;
   }
 
-    .cardWrap.valid button:active
-    {
-      box-shadow: -1px -1px 0px 1px #437d3f;
-      top: 1px;
-      left: 1px;
-    }
+  .cardWrap.valid button:active {
+    box-shadow: -1px -1px 0 1px #437d3f;
+    top: 1px;
+    left: 1px;
+  }
 
-    .cardWrap input.invalid
-    {
-      border-color: #a500009c;
-    }
+  .cardWrap input.invalid {
+    border-color: #a500009c;
+  }
 
-    .bankLogo, .bankLogo img
-    {
-      height: 56px;
-    }
+  .bankLogo,
+  .bankLogo img {
+    height: 56px;
+  }
 
-    .brandLogo
-    {
-      height: 40px;
-      margin: 12px 0 0;
-    }
+  .brandLogo {
+    height: 40px;
+    margin: 12px 0 0;
+  }
 
-    .dark input:not([type=radio]):not([type=checkbox])
-    {
-      background: transparent;
-      color: #fff;
-      border: none;
-    }
+  .dark input:not([type=radio]):not([type=checkbox]) {
+    background: transparent;
+    color: #fff;
+    border: none;
+  }
 
-      .dark input:-webkit-autofill,
-      .dark input:-webkit-autofill:hover,
-      .dark input:-webkit-autofill:focus,
-      .dark input:-webkit-autofill:active
-      {
-        -webkit-text-fill-color: #fff !important;
-      }
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark input:-webkit-autofill:active {
+    -webkit-text-fill-color: #fff !important;
+  }
 
-      .dark label {
-        color: #ccc8c8
-      }
+  .dark label {
+    color: #ccc8c8;
+  }
 
-      .dark input::-webkit-input-placeholder
-      {
-        color: #fff;
-      }
+  .dark input::-webkit-input-placeholder {
+    color: #fff;
+  }
 
-      .valid .dark .submit
-      {
-        border-top: none;
-      }
+  .valid .dark .submit {
+    border-top: none;
+  }
 
-      .dark .brandLogo
-      {
-        margin: -28px 0 0;
-      }
+  .dark .brandLogo {
+    margin: -28px 0 0;
+  }
 
-      .dark button
-      {
-        background: 0 0;
-      }
+  .dark button {
+    background: 0 0;
+  }
 
 </style>

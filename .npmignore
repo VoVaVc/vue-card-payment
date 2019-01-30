@@ -3,3 +3,4 @@ build/
 test/
 src/
 node_modules/
+example/
